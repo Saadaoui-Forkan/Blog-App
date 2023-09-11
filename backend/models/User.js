@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const Joi = require('joi')
+const jwt = require('jsonwebtoken')
+
 
 // User Schema
 const UserSchema = new mongoose.Schema({
@@ -46,6 +48,11 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 })
 
+// Generate Auth Token
+UserSchema.methods.generateAuthToken = function () {
+    return jwt.sign({id: this.id, isAdmin: this.isAdmin, username: this.username}, process.env.JWT_SECRET_KEY)
+}
+
 // User Model
 const User = mongoose.model('User', UserSchema)
 
@@ -54,6 +61,14 @@ function validateRegisterUser(obj) {
     const schema = Joi.object({
         username: Joi.string().trim().min(3).max(20).required(),
         email: Joi.string().trim().min(5).max(50).required().email(),
+        password: Joi.string().min(6).required()
+    })
+    return schema.validate(obj)
+}
+
+function validateLoginUser(obj) {
+    const schema = Joi.object({
+        email: Joi.string().trim().min(5).max(50).required().email(),
         password: Joi.string().min(8).required()
     })
     return schema.validate(obj)
@@ -61,5 +76,6 @@ function validateRegisterUser(obj) {
 
 module.exports = {
     User,
-    validateRegisterUser
+    validateRegisterUser,
+    validateLoginUser,
 }
