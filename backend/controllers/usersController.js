@@ -61,8 +61,21 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
   res.status(200).json(updated);
 });
 
+/**-----------------------------------------------
+ * @desc    Get The Number of All Users
+ * @route   /api/users/count
+ * @method  GET 
+ * @access  private (only admin)
+ ------------------------------------------------*/
+ const getUsersCount = asyncHandler(async (req, res) => {
+   // console.log(req.user)
+   const usersCount = await User.count()
+   res.status(200).json(usersCount);
+ });
+
 module.exports = {
   getUsersController,
   getUserProfileCtr,
-  validateUpdateUserCtr
+  validateUpdateUserCtr,
+  getUsersCount
 };
