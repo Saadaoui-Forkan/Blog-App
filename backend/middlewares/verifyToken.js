@@ -19,6 +19,17 @@ function verifyToken(req, res, next) {
 }
 
 // Verify Token & Admin
+function verifyTokenAndOnlyUser(req, res, next) {
+    verifyToken(req, res, () => {
+        if (req.user.id === req.params.id) {
+            next()
+        }else {
+            return res.status(403).json({msg: "not allowed, only user himself"})
+        }
+    })
+}
+
+// Verify Token & Only User Himself
 function verifyTokenAndAdmin(req, res, next) {
     verifyToken(req, res, () => {
         if (req.user.isAdmin) {
@@ -31,5 +42,6 @@ function verifyTokenAndAdmin(req, res, next) {
 
 module.exports = {
     verifyToken, 
-    verifyTokenAndAdmin
+    verifyTokenAndAdmin,
+    verifyTokenAndOnlyUser,
 }
