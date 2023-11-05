@@ -8,11 +8,9 @@ const { User } = require('../models/User')
  * @access  private (only admin)
  ------------------------------------------------*/
  const getUsersController = asyncHandler (async(req, res) => {
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "not allowed, only admin" })
-    }
-    const users = await User.find();
-    res.status(200).json(users)
+   console.log(req.user)
+   const users = await User.find();
+   res.status(200).json(users)
  })
 
  module.exports = {
