@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { User, validateUpdateUser } = require("../models/User");
 const bcrypt = require('bcryptjs')
+const path = require('path')
 
 /**-----------------------------------------------
  * @desc    Get All Users Profile
@@ -80,7 +81,19 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
  * @access  private (only logged user)
  ------------------------------------------------*/
  const profilePhotoUploadCtr = asyncHandler(async(req, res) => {
+  // 1.Validation
+  if (!req.file) {
+    return res.status(400).json({ message: "No file Provided" })
+  }
+
+  // 2.Get The Path To The Image
+  const imagePath = path.join(__dirname, `../images/${req.file.filename}`)
+
+  // 7.Send Response To Client
   res.status(200).json({ message: "Photo Uploaded" })
+
+  // 8.Remove Image From The Server
+
  })
 
 module.exports = {
