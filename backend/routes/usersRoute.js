@@ -3,11 +3,13 @@ const {
   getUserProfileCtr,
   validateUpdateUserCtr,
   getUsersCount,
+  profilePhotoUploadCtr,
 } = require("../controllers/usersController");
 const validateObjectId = require("../middlewares/validateObjectId");
 const {
   verifyTokenAndAdmin,
   verifyTokenAndOnlyUser,
+  verifyToken,
 } = require("../middlewares/verifyToken");
 const router = require("express").Router();
 
@@ -27,5 +29,8 @@ router.put(
 
 //  /api/users/count
 router.get("/count", verifyTokenAndAdmin, getUsersCount);
+
+//  /api/users/profile/profile-photo-upload
+router.post("/profile/profile-photo-upload", verifyToken, profilePhotoUploadCtr)
 
 module.exports = router;

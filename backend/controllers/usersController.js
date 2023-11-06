@@ -73,9 +73,20 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
    res.status(200).json(usersCount);
  });
 
+ /**-----------------------------------------------
+ * @desc    Post Upload Profile Photo
+ * @route   /api/users/profile/profile-photo-upload
+ * @method  POST 
+ * @access  private (only logged user)
+ ------------------------------------------------*/
+ const profilePhotoUploadCtr = asyncHandler(async(req, res) => {
+  res.status(200).json({ message: "Photo Uploaded" })
+ })
+
 module.exports = {
   getUsersController,
   getUserProfileCtr,
   validateUpdateUserCtr,
-  getUsersCount
+  getUsersCount,
+  profilePhotoUploadCtr
 };
