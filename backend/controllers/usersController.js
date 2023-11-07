@@ -120,10 +120,40 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
     fs.unlinkSync(imagePath)
  })
 
+  /**-----------------------------------------------
+ * @desc    Delete User Profile
+ * @route   /api/users/profile/:id
+ * @method  DELETE 
+ * @access  private (only admin or user himself)
+ ------------------------------------------------*/
+ const deleteUserProfileCtr = asyncHandler(async(req, res) => {
+  // 1.Get User From DB
+  const user = await User.findById(req.params.id)
+  if (!user) {
+    return res.status(404).json({ message: "user not founded" })
+  }
+
+  // @Todo  2.Get All Posts From Db
+  // @Todo  3.Get Public ids from posts
+  // @Todo  4.delete all posts image from cloudinary that belong to this user
+
+  // 5.delete the profile picture from cloudinary
+  await cloudinaryRemoveImage(user.profilePhoto.publicId)
+
+  // @Todo  6.delete user posts & comments
+
+  // 7.delete the user himself
+  await User.findByIdAndDelete(req.params.id)
+
+  // 8.send response to the client
+  res.status(200).json({ message: "your profile has been deleted" })
+ })
+
 module.exports = {
   getUsersController,
   getUserProfileCtr,
   validateUpdateUserCtr,
   getUsersCount,
-  profilePhotoUploadCtr
+  profilePhotoUploadCtr,
+  deleteUserProfileCtr
 };
