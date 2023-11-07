@@ -93,6 +93,7 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
 
   // 3.Upload To Cloudinary
   const result = await cloudinaryUploadImage(imagePath)
+  // console.log(result)
 
   // 4.Get The User From DB
   const user = await User.findById(req.user.id)
@@ -110,12 +111,10 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
   await user.save()
 
   // 7.Send Response To Client
-  res
-    .status(200)
-    .json({
-      message: "Photo Uploaded",
-      profilePhoto: { url: result.secure_url, publicId: result.public_id },
-    });
+  res.status(200).json({
+    message: "Photo Uploaded",
+    profilePhoto: { url: result.secure_url, publicId: result.public_id },
+  });
 
   // 8.Remove Image From The Server
     fs.unlinkSync(imagePath)
