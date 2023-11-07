@@ -85,7 +85,7 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
  const profilePhotoUploadCtr = asyncHandler(async(req, res) => {
   // 1.Validation
   if (!req.file) {
-    return res.status(400).json({ message: "No file Provided" })
+    return res.status(400).json({ message: "No Photo Provided" })
   }
 
   // 2.Get The Path To The Image
