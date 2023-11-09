@@ -91,9 +91,37 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
   res.status(200).json(post);
 });
 
+/**-----------------------------------------------
+ * @desc    Delete Post
+ * @route   /api/posts/:id
+ * @method  DELETE
+ * @access  private(only admin or owner of the post)
+ ------------------------------------------------*/
+const deletePostCtr = asyncHandler(async(req, res) => {
+  const post = await Post.findById(req.params.id)
+  if (!post) {
+    return res.status(404).json({ msg: "Post Not Found" })
+  }
+
+  if (req.user.isAdmin || req.user.id === post.user.toString()) {
+    await Post.findByIdAndDelete(req.params.id)
+    await cloudinaryRemoveImage(post.image.publicId)
+
+    //  @TODO delete all images that belong to this post
+
+    res.status(200).json({
+      msg: "post has been deleted successfully",
+      postId: post._id
+    })
+  } else {
+    res.status(403).json({ msg: "access denied, forbidden" })
+  }
+})
+
 
 module.exports = {
   createPostCtr,
   getAllPostsCtr,
   getSinglePostCtr,
+  deletePostCtr
 };
