@@ -84,7 +84,9 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
  const getSinglePostCtr = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate("user", ["-password"]);
+  const post = await Post.findById(req.params.id)
+  .populate("user", "-password");
+  console.log(post)
   if (!post) {
     return res.status(404).json({ msg: "Post Not Found" })
   }
@@ -202,6 +204,49 @@ const deletePostCtr = asyncHandler(async(req, res) => {
   fs.unlinkSync(imagePath)
  })
 
+ /**-----------------------------------------------
+ * @desc    Toggle Like
+ * @route   /api/posts/like/:id
+ * @method  PUT
+ * @access  private(only logged in user)
+ ------------------------------------------------*/
+ const toggleLikeCtr = asyncHandler(async (req, res) => {
+   const post = await Post.findById(req.params.id);
+   const loggedInUser = req.user.id;
+  
+   if (!post) {
+     return res.status(404).json({ message: "post not found" });
+   }
+
+   const isAlreadyLikedPost = post.likes.find(
+     (user) => user.toString() === loggedInUser
+   );
+
+   if (isAlreadyLikedPost) {
+     const post = await Post.findByIdAndUpdate(
+       req.params.id,
+       {
+         $pull: {
+           likes: loggedInUser,
+         },
+       },
+       { new: true }
+     );
+   } else {
+     const post = await Post.findByIdAndUpdate(
+       req.params.id,
+       {
+         $push: {
+           likes: loggedInUser,
+         },
+       },
+       { new: true }
+     );
+   }
+
+   res.status(200).json(post)
+ });
+
 
 module.exports = {
   createPostCtr,
@@ -209,5 +254,6 @@ module.exports = {
   getSinglePostCtr,
   deletePostCtr,
   updatePostCtr,
-  updatePostImageCtr
+  updatePostImageCtr,
+  toggleLikeCtr,
 };
