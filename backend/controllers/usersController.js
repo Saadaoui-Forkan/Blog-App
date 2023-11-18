@@ -12,8 +12,11 @@ const { cloudinaryUploadImage, cloudinaryRemoveImage } = require("../utils/cloud
  * @access  private (only admin)
  ------------------------------------------------*/
 const getUsersController = asyncHandler(async (req, res) => {
-  // console.log(req.user)
-  const users = await User.find().select("-password");
+  
+  const users = await User.find()
+    .select("-password")
+    // Populate Posts That Belong To This UserWhen Getting Profile
+    .populate("posts");
   res.status(200).json(users);
 });
 
@@ -24,8 +27,11 @@ const getUsersController = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
 const getUserProfileCtr = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select("-password");
-  // console.log(user)
+  const user = await User.findById(req.params.id)
+    .select("-password")
+    // Populate Posts That Belong To This UserWhen Getting Profile
+    .populate("posts")
+  
   if (!user) {
     return res.status(404).json({ message: "User Not Found" });
   }
