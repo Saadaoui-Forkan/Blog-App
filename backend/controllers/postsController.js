@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const { Post, validateCreatePost, validateUpdatePost } = require("../models/Post");
+const User = require("../models/User")
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
@@ -85,10 +86,10 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
  const getSinglePostCtr = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id)
-  .populate("user", "-password");
-  console.log(post)
+  .populate("user", ["-password"]);
+  
   if (!post) {
-    return res.status(404).json({ msg: "Post Not Found" })
+    return res.status(404).json({ message: "Post Not Found" })
   }
   res.status(200).json(post);
 });
@@ -102,7 +103,7 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
 const deletePostCtr = asyncHandler(async(req, res) => {
   const post = await Post.findById(req.params.id)
   if (!post) {
-    return res.status(404).json({ msg: "Post Not Found" })
+    return res.status(404).json({ message: "Post Not Found" })
   }
 
   if (req.user.isAdmin || req.user.id === post.user.toString()) {
@@ -112,7 +113,7 @@ const deletePostCtr = asyncHandler(async(req, res) => {
     //  @TODO delete all images that belong to this post
 
     res.status(200).json({
-      msg: "post has been deleted successfully",
+      message: "post has been deleted successfully",
       postId: post._id
     })
   } else {
@@ -211,7 +212,7 @@ const deletePostCtr = asyncHandler(async(req, res) => {
  * @access  private(only logged in user)
  ------------------------------------------------*/
  const toggleLikeCtr = asyncHandler(async (req, res) => {
-   const post = await Post.findById(req.params.id);
+   const post = await Post.findById(req.params.id).populate("user", ["username"])
    const loggedInUser = req.user.id;
   
    if (!post) {

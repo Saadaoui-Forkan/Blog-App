@@ -16,7 +16,7 @@ const { verifyToken, verifyTokenAndAuthorization } = require("../middlewares/ver
 router.post("/", verifyToken, photoUpload.single('image'), createPostCtr);
 
 //  /api/posts
-router.get("/", validateObjectId, getAllPostsCtr);
+router.get("/", getAllPostsCtr);
 
 //  /api/posts/:id
 router.get('/:id', validateObjectId, getSinglePostCtr)
