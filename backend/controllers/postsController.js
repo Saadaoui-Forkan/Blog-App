@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const { Post, validateCreatePost, validateUpdatePost } = require("../models/Post");
-const User = require("../models/User")
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
