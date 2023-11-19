@@ -1,14 +1,13 @@
-import { span } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import img from '../../images/home-bg.jpg'
 
 const HeaderRight = () => {
-
   const [dropdown, setDropdown] = useState(false);
 
   return (
     <div className="header-right">
-        <>
+      {/* <>
           <div className="header-right-user-info">
             <span
               onClick={() => setDropdown((prev) => !prev)}
@@ -38,23 +37,17 @@ const HeaderRight = () => {
               </div>
             )}
           </div>
-        </>
-        <>
-            <span 
-                // to="/login" 
-                className="header-right-span"
-            >
-            <i className="bi bi-box-arrow-in-right"></i>
-            <span>Login</span>
-          </span>
-            <span 
-                // to="/register" 
-                className="header-right-span"
-            >
-            <i className="bi bi-person-plus"></i>
-            <span>Register</span>
-          </span>
-        </>
+        </> */}
+      <>
+        <Link to="/login" className="header-right-link">
+          <i className="bi bi-box-arrow-in-right"></i>
+          <span>Login</span>
+        </Link>
+        <Link to="/register" className="header-right-link">
+          <i className="bi bi-person-plus"></i>
+          <span>Register</span>
+        </Link>
+      </>
     </div>
   );
 };
