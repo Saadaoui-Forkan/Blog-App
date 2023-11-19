@@ -6,6 +6,7 @@ const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
 } = require("../utils/cloudinary");
+const { Comment } = require('../models/Comment')
 
 /**-----------------------------------------------
  * @desc    Create New Post
@@ -110,7 +111,8 @@ const deletePostCtr = asyncHandler(async(req, res) => {
     await Post.findByIdAndDelete(req.params.id)
     await cloudinaryRemoveImage(post.image.publicId)
 
-    //  @TODO delete all images that belong to this post
+    // Delete all comments that belong to this post
+    await Comment.deleteMany({ postId: post._id })
 
     res.status(200).json({
       message: "post has been deleted successfully",
