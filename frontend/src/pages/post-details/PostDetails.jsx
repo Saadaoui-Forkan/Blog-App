@@ -2,17 +2,53 @@ import { useEffect, useState } from "react";
 import { Link, useParams,useNavigate } from "react-router-dom";
 import "./post-details.css";
 import { posts } from "../../dummyData";
+import { toast } from 'react-toastify'
+import AddComment from "../../components/comments/AddComment";
+import swal from "sweetalert";
+import CommentList from "../../components/comments/CommentList";
 
 function PostDetails() {
   const { id } = useParams();
+  const [file, setFile] = useState(null);
+
   const post = posts.find((p) => p._id === +id);
+  //   console.log(post)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  //   Update Image Submit Handler
+  const updateImageSubmitHandler = (e) => {
+    e.preventDefault();
+    if (!file) return toast.warning("There is no file");
+    console.log(file)
+  };
+
+  // Delete Post Handler
+  const deletePostHandler = () => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this post!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        swal('post has been deleted', {
+          icon: "success"
+        })
+      }else {
+        swal("something went wrong")
+      }
+    });
+  };
+
+
   return (
     <section className="post-details">
-      <div className="post-details-image-wrapper">
-        <img src={post?.image} alt="" className="post-details-image" />
-        <form
-          className="update-post-image-form"
-        >
+      <div className="post-details-image-wrapper" onSubmit={updateImageSubmitHandler}>
+        <img src={file ? URL.createObjectURL(file) : post?.image} alt="" className="post-details-image" />
+        <form className="update-post-image-form">
           <label htmlFor="file" className="update-post-label">
             <i className="bi bi-image-fill"></i>
             Select new image
@@ -22,6 +58,7 @@ function PostDetails() {
             type="file"
             name="file"
             id="file"
+            onChange={e => setFile(e.target.files[0])}
           />
           <button type="submit">upload</button>
         </form>
@@ -59,9 +96,11 @@ function PostDetails() {
 
         <div>
           <i className="bi bi-pencil-square"></i>
-          <i className="bi bi-trash-fill"></i>
+          <i className="bi bi-trash-fill" onClick={deletePostHandler}></i>
         </div>
       </div>
+      <AddComment/>
+      <CommentList/>
       {/* {user ? (
         <AddComment postId={post?._id} />
       ) : (

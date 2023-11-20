@@ -8,10 +8,12 @@ import CreatePost from "./pages/create-post/CreatePost";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Footer from "./components/footer/Footer";
 import PostDetails from "./pages/post-details/PostDetails";
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   return (
     <BrowserRouter >
+      <ToastContainer theme="colored"/>
       <Header/>
       <Routes>
         <Route path="/" element={<Home/>}/>

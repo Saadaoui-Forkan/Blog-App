@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './create-post.css'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 function CreatePost() {
   const [title, setTitle] = useState("");
@@ -26,7 +26,6 @@ function CreatePost() {
 
   return (
     <section className="create-post">
-      <ToastContainer theme='colored' />
       <h1 className="create-post-title">Create New Post</h1>
       <form className="create-post-form" onSubmit={formSubmitHandler}>
         <input
