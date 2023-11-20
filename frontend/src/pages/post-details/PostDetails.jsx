@@ -6,10 +6,12 @@ import { toast } from 'react-toastify'
 import AddComment from "../../components/comments/AddComment";
 import swal from "sweetalert";
 import CommentList from "../../components/comments/CommentList";
+import UpdatePostModal from "./UpdatePostModal";
 
 function PostDetails() {
   const { id } = useParams();
   const [file, setFile] = useState(null);
+  const [updatePost, setUpdatePost] = useState(false);
 
   const post = posts.find((p) => p._id === +id);
   //   console.log(post)
@@ -95,7 +97,7 @@ function PostDetails() {
         </div>
 
         <div>
-          <i className="bi bi-pencil-square"></i>
+          <i className="bi bi-pencil-square" onClick={()=>setUpdatePost(true)}></i>
           <i className="bi bi-trash-fill" onClick={deletePostHandler}></i>
         </div>
       </div>
@@ -107,12 +109,12 @@ function PostDetails() {
         <p className="post-details-info-write">
           to write a comment you should login first
         </p>
-      )}
+      )} */}
 
       <CommentList comments={post?.comments} />
       {updatePost && (
         <UpdatePostModal post={post} setUpdatePost={setUpdatePost} />
-      )} */}
+      )}
     </section>
   );
 }
