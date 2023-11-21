@@ -9,6 +9,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import Footer from "./components/footer/Footer";
 import PostDetails from "./pages/post-details/PostDetails";
 import { ToastContainer } from 'react-toastify'
+import Category from "./pages/category/Category";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<Register/>}/>
         <Route path="/posts" element={<PostsPage/>}/>
         <Route path="/posts/create-post" element={<CreatePost/>}/>
+        <Route path="/posts/categories/:category" element={<Category/>}/>
         <Route path="/posts/details/:id" element={<PostDetails/>}/>
         <Route path="/admin" element={<AdminDashboard/>}/>
       </Routes>
