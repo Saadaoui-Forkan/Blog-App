@@ -4,9 +4,11 @@ import { posts } from '../../dummyData'
 import PostItem from '../../components/posts/PostItem'
 import { toast } from 'react-toastify'
 import swal from "sweetalert";
+import UpdateProfileModal from './UpdateProfileModal'
 
 function Profile() {
   const [file, setFile] = useState(null);
+  const [updateProfile, setUpdateProfile] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,7 +80,7 @@ function Profile() {
         </div>
 
         <button
-          // onClick={() => setUpdateProfile(true)}
+          onClick={() => setUpdateProfile(true)}
           className="profile-update-btn"
         >
           <i className="bi bi-file-person-fill"></i>
@@ -94,12 +96,11 @@ function Profile() {
       <button className="delete-account-btn" onClick={deleteAccountHandler}>
         Delete Your Account
       </button>
-      {/* {updateProfile && (
+      {updateProfile && (
         <UpdateProfileModal
-          profile={profile}
           setUpdateProfile={setUpdateProfile}
         />
-      )} */}
+      )}
     </section>
   );
 }
