@@ -1,9 +1,14 @@
-import React from 'react'
+import "./admin.css";
+import AdminMain from "./AdminMain";
+import AdminSidebar from "./AdminSidebar";
 
-function AdminDashboard() {
+const AdminDashboard = () => {
   return (
-    <div>AdminDashboard</div>
-  )
-}
+    <section className="admin-dashboard">
+      <AdminSidebar />
+      <AdminMain />
+    </section>
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;
