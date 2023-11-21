@@ -10,6 +10,7 @@ import Footer from "./components/footer/Footer";
 import PostDetails from "./pages/post-details/PostDetails";
 import { ToastContainer } from 'react-toastify'
 import Category from "./pages/category/Category";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   return (
@@ -20,10 +21,15 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
-        <Route path="/posts" element={<PostsPage/>}/>
-        <Route path="/posts/create-post" element={<CreatePost/>}/>
-        <Route path="/posts/categories/:category" element={<Category/>}/>
-        <Route path="/posts/details/:id" element={<PostDetails/>}/>
+        <Route path="/profile/:id" element={<Profile/>}/>
+        {/* posts nested route */}
+        <Route path="posts">
+          <Route index element={<PostsPage/>}/>
+          <Route path="create-post" element={<CreatePost/>}/>
+          <Route path="categories/:category" element={<Category/>}/>
+          <Route path="details/:id" element={<PostDetails/>}/>
+        </Route>
+        
         <Route path="/admin" element={<AdminDashboard/>}/>
       </Routes>
       <Footer/>

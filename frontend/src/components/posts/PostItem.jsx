@@ -11,7 +11,7 @@ const PostItem = ({ post }) => {
         <div className="post-item-info">
           <div className="post-item-author">
             <strong>Author: </strong>
-            <Link className="post-item-username" >
+            <Link className="post-item-username" to="/profile/1">
               {post?.user.username}
             </Link>
           </div>
