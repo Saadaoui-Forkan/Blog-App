@@ -15,6 +15,9 @@ import UsersTable from "./pages/admin/UsersTable";
 import PostsTable from "./pages/admin/PostsTable";
 import CategoriesTable from "./pages/admin/CategoriesTable";
 import CommentsTable from "./pages/admin/CommentsTable";
+import FrogotPassword from "./pages/forms/ForgotPassword";
+import ResetPassword from "./pages/forms/ResetPassword";
+import NotFound from "./pages/not-found/NotFound";
 
 function App() {
   return (
@@ -25,8 +28,10 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
+        <Route path="/forgot-password" element={<FrogotPassword/>}/>
+        <Route path="/reset-password" element={<ResetPassword/>}/>
         <Route path="/profile/:id" element={<Profile/>}/>
-        {/* posts nested route */}
+        
         <Route path="posts">
           <Route index element={<PostsPage/>}/>
           <Route path="create-post" element={<CreatePost/>}/>
@@ -41,6 +46,8 @@ function App() {
           <Route path="categories-table" element={<CategoriesTable/>}/>
           <Route path="comments-table" element={<CommentsTable/>}/>
         </Route>
+        
+        <Route path="*" element={<NotFound/>}/>
       </Routes>
       <Footer/>
     </BrowserRouter>
