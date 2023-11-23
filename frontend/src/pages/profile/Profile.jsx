@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import swal from "sweetalert";
 import UpdateProfileModal from './UpdateProfileModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserProfile } from '../../redux/apiCalls/profileApiCall'
+import { getUserProfile, uploadProfilePhoto } from '../../redux/apiCalls/profileApiCall'
 import { useParams } from 'react-router-dom'
 import { posts } from '../../dummyData'
 
@@ -28,7 +28,7 @@ function Profile() {
 
     const formData = new FormData();
     formData.append("image", file);
-    console.log("img uploaded");
+    dispatch(uploadProfilePhoto(formData))
   };
 
   // Delete Account Handler
