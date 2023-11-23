@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import './profile.css'
-import { posts } from '../../dummyData'
 import PostItem from '../../components/posts/PostItem'
 import { toast } from 'react-toastify'
 import swal from "sweetalert";
 import UpdateProfileModal from './UpdateProfileModal'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserProfile } from '../../redux/apiCalls/profileApiCall'
+import { useParams } from 'react-router-dom'
+import { posts } from '../../dummyData'
 
 function Profile() {
+  const dispatch = useDispatch()
+  const { id } = useParams()
+  const {profile} = useSelector(state => state.profile)
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
 
   useEffect(() => {
+    dispatch(getUserProfile(id))
     window.scrollTo(0, 0);
-  }, []);
+  }, [id]);
 
   // Form Submit Handler
   const formSubmitHandler = (e) => {
@@ -48,7 +55,7 @@ function Profile() {
       <div className="profile-header">
         <div className="profile-image-wrapper">
           <img
-            src={file ? URL.createObjectURL(file) : "/images/user-avatar.png"}
+            src={file ? URL.createObjectURL(file) : profile?.profilePhoto.url}
             alt="user-avatar"
             className="profile-image"
           />
@@ -71,12 +78,11 @@ function Profile() {
             </button>
           </form>
         </div>
-        <h1 className="profile-username">{"username"}</h1>
-        <p className="profile-bio">{"bio"}</p>
+        <h1 className="profile-username">{profile?.username}</h1>
+        <p className="profile-bio">{profile?.bio}</p>
         <div className="user-date-joined">
           <strong>Date Joined: </strong>
-          {/* <span>{new Date(profile?.createdAt).toDateString()}</span> */}
-          <span>{new Date(Date.now()).toDateString()}</span>
+          <span>{new Date(profile?.createdAt).toDateString()}</span>
         </div>
 
         <button
@@ -88,7 +94,7 @@ function Profile() {
         </button>
       </div>
       <div className="profile-posts-list">
-        <h2 className="profile-posts-list-title">{"username"} Posts</h2>
+        <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
         {posts.map((post, index) => (
           <PostItem key={index} post={post} />
         ))}
