@@ -104,7 +104,8 @@ function Profile() {
       </button>
       {updateProfile && (
         <UpdateProfileModal
-          setUpdateProfile={setUpdateProfile}
+          profile = { profile }
+          setUpdateProfile = { setUpdateProfile }
         />
       )}
     </section>
