@@ -32,7 +32,7 @@ const registerUserController = async (req, res) => {
         });
         await user.save();
 
-        res.send({ msg: "success" });
+        res.send({ message: "success" });
 
     } catch (error) {
         console.log(error.message);

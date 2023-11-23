@@ -2,8 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./form.css";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../redux/apiCalls/authApiCall";
+import swal from "sweetalert";
 
 function Register() {
+    const dispatch = useDispatch()
+    const { registerMessage } = useSelector(state => state.auth)
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,8 +20,18 @@ function Register() {
     if(username.trim() === "") return toast.error("Username is required");
     if(email.trim() === "") return toast.error("Email is required");
     if(password.trim() === "") return toast.error("Password is required");
+    dispatch(registerUser({ username, email, password }))
+}
 
-    console.log({ username, email, password })
+if (registerMessage) {
+    swal({
+        title: registerMessage,
+        icon: "success"
+    }).then(isOk => {
+        if (isOk) {
+            navigate('/login')
+        }
+    })
 }
 
   return (
