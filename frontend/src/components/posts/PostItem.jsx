@@ -5,13 +5,13 @@ const PostItem = ({ post }) => {
   return (
     <div className="post-item">
       <div className="post-item-image-wrapper">
-        <img src={post?.image} alt="" className="post-item-image" />
+        <img src={post?.image.url} alt="" className="post-item-image" />
       </div>
       <div className="post-item-info-wrapper">
         <div className="post-item-info">
           <div className="post-item-author">
             <strong>Author: </strong>
-            <Link className="post-item-username" to="/profile/1">
+            <Link className="post-item-username" to={`/profile/${post?.user?._id}`}>
               {post?.user.username}
             </Link>
           </div>

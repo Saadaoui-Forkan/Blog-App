@@ -96,6 +96,17 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------------------
+ * @desc    Get Posts Count
+ * @route   /api/posts/count
+ * @method  GET
+ * @access  public
+ ------------------------------------------------*/
+ module.exports.getPostCountCtrl = asyncHandler(async (req, res) => {
+  const count = await Post.count();
+  res.status(200).json(count);
+});
+
+/**-----------------------------------------------
  * @desc    Delete Post
  * @route   /api/posts/:id
  * @method  DELETE
