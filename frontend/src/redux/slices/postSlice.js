@@ -5,17 +5,32 @@ const postSlice = createSlice({
   initialState: {
     posts: [],
     postsCount: null,
-    postsCat: []
+    postsCat: [],
+    loading: false,
+    isPostcreated: false,
   },
   reducers: {
     setPosts(state, action) {
-        state.posts = action.payload
+      state.posts = action.payload;
     },
     setPostsCount(state, action) {
-        state.postsCount = action.payload
+      state.postsCount = action.payload;
     },
     setPostsCat(state, action) {
-        state.postsCat = action.payload
+      state.postsCat = action.payload;
+    },
+    setLoading(state) {
+      state.loading = true;
+    },
+    clearLoading(state) {
+      state.loading = false;
+    },
+    setIsPostCreated(state) {
+      state.isPostcreated = true;
+      state.loading = false;
+    },
+    clearIsPostCreated(state) {
+      state.isPostcreated = false;
     }
   },
 });

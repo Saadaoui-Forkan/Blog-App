@@ -1,8 +1,15 @@
-import React, {useState} from 'react'
-import './create-post.css'
-import { toast } from 'react-toastify'
+import React, {useState, useEffect} from 'react';
+import './create-post.css';
+import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from "react-redux";
+import { createPost } from '../../redux/apiCalls/postApiCall';
+import { useNavigate } from "react-router-dom";
+import { RotatingLines } from "react-loader-spinner";
 
 function CreatePost() {
+  const dispatch = useDispatch();
+  const { loading, isPostcreated } = useSelector((state) => state.post);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -22,7 +29,16 @@ function CreatePost() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
+
+    dispatch(createPost(formData))
   }
+
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if (isPostcreated) {
+      navigate("/");
+    }
+  }, [ isPostcreated, navigate])
 
   return (
     <section className="create-post">
@@ -65,7 +81,7 @@ function CreatePost() {
           onChange={(e)=>setFile(e.target.files[0])}
         />
         <button type="submit" className="create-post-btn">
-          {/* {loading ? (
+          {loading ? (
             <RotatingLines
               strokeColor="white"
               strokeWidth="5"
@@ -75,8 +91,7 @@ function CreatePost() {
             />
           ) : (
             "Create"
-          )} */}
-          create
+          )}
         </button>
       </form>
     </section>
