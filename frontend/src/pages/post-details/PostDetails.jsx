@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import { Link, useParams,useNavigate } from "react-router-dom";
 import "./post-details.css";
-import { posts } from "../../dummyData";
 import { toast } from 'react-toastify'
 import AddComment from "../../components/comments/AddComment";
 import swal from "sweetalert";
 import CommentList from "../../components/comments/CommentList";
 import UpdatePostModal from "./UpdatePostModal";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSinglePost } from "../../redux/apiCalls/postApiCall";
 
 function PostDetails() {
+  const dispatch = useDispatch();
+  const { post } = useSelector((state) => state.post);
+  const { user } = useSelector((state) => state.auth);
+
   const { id } = useParams();
   const [file, setFile] = useState(null);
   const [updatePost, setUpdatePost] = useState(false);
 
-  const post = posts.find((p) => p._id === +id);
   //   console.log(post)
   useEffect(() => {
+    dispatch(fetchSinglePost(id))
     window.scrollTo(0, 0);
   }, []);
 
@@ -48,33 +53,44 @@ function PostDetails() {
 
   return (
     <section className="post-details">
-      <div className="post-details-image-wrapper" onSubmit={updateImageSubmitHandler}>
-        <img src={file ? URL.createObjectURL(file) : post?.image} alt="" className="post-details-image" />
-        <form className="update-post-image-form">
-          <label htmlFor="file" className="update-post-label">
-            <i className="bi bi-image-fill"></i>
-            Select new image
-          </label>
-          <input
-            style={{ display: "none" }}
-            type="file"
-            name="file"
-            id="file"
-            onChange={e => setFile(e.target.files[0])}
-          />
-          <button type="submit">upload</button>
-        </form>
+      <div
+        className="post-details-image-wrapper"
+        onSubmit={updateImageSubmitHandler}
+      >
+        <img
+          src={file ? URL.createObjectURL(file) : post?.image.url}
+          alt=""
+          className="post-details-image"
+        />
+        {user?._id === post?.user?._id && (
+          <form className="update-post-image-form">
+            <label htmlFor="file" className="update-post-label">
+              <i className="bi bi-image-fill"></i>
+              Select new image
+            </label>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              name="file"
+              id="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+            <button type="submit">upload</button>
+          </form>
+        )}
       </div>
       <h1 className="post-details-title">{post?.title}</h1>
       <div className="post-details-user-info">
         <img
-          src={post?.user.image}
+          src={post?.user?.profilePhoto?.url}
           alt=""
           className="post-details-user-image"
         />
         <div className="post-details-user">
           <strong>
-            <Link to={`/profile/1`}>{post?.user.username}</Link>
+            <Link to={`/profile/${post?.user?._id}`}>
+              {post?.user?.username}
+            </Link>
           </strong>
           <span>{new Date(post?.createdAt).toDateString()}</span>
         </div>
@@ -91,18 +107,20 @@ function PostDetails() {
       </p>
       <div className="post-details-icon-wrapper">
         <div>
-          <i className="bi bi-hand-thumbs-up"></i>
-
+          {user && <i className="bi bi-hand-thumbs-up"></i>}
           <small>{post?.likes.length} likes</small>
         </div>
-
-        <div>
-          <i className="bi bi-pencil-square" onClick={()=>setUpdatePost(true)}></i>
-          <i className="bi bi-trash-fill" onClick={deletePostHandler}></i>
-        </div>
+        {user?._id === post?.user?._id && (
+          <div>
+            <i
+              className="bi bi-pencil-square"
+              onClick={() => setUpdatePost(true)}
+            ></i>
+            <i className="bi bi-trash-fill" onClick={deletePostHandler}></i>
+          </div>
+        )}
       </div>
-      <AddComment/>
-      <CommentList/>
+      <AddComment />
       {/* {user ? (
         <AddComment postId={post?._id} />
       ) : (

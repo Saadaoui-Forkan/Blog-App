@@ -57,3 +57,15 @@ export function createPost(newPost) {
     }
   };
 }
+
+// Fetch Single Post
+export function fetchSinglePost(postId) {
+  return async (dispatch) => {
+      try {
+          const { data } = await request.get(`/api/posts/${postId}`)
+          dispatch(postActions.setPost(data))
+      } catch (error) {
+          toast.error(error.response.data.message)
+      }
+  }
+}

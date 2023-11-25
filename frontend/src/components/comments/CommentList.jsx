@@ -2,8 +2,13 @@ import "./comment-list.css";
 import { useState } from "react";
 import swal from "sweetalert";
 import UpdateCommentModal from "./UpdateCommentModal";
+import Moment from "react-moment";
+import { useDispatch, useSelector } from "react-redux";
 
-function CommentList() {
+function CommentList({ comments }) {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
   const [updateComment, setUpdateComment] = useState(false)
   // Delete Comment Handler
   const deleteCommentHandler = () => {
@@ -25,16 +30,20 @@ function CommentList() {
   };
   return (
     <div className="comment-list">
-      <h4 className="comment-list-count">2 Comments</h4>
-      {[1, 2].map((comment) => (
-        <div key={comment} className="comment-item">
+      <h4 className="comment-list-count">{comments?.length}</h4>
+      {comments?.map((comment) => (
+        <div key={comment?._id} className="comment-item">
           <div className="comment-item-info">
-            <div className="comment-item-username">Mahmoud</div>
+            <div className="comment-item-username">{comment?.username}</div>
             <div className="comment-item-time">
-              2 min ago
+              <Moment fromNow ago>
+                {comment?.createdAt}
+              </Moment>{" "}
+              ago
             </div>
           </div>
-          <p className="comment-item-text">amazing post</p>
+          <p className="comment-item-text">{comment?.text}</p>
+          {user?._id === comment?.user && (
             <div className="comment-item-icon-wrapper">
               <i
                 onClick={() => setUpdateComment(true)}
@@ -45,15 +54,14 @@ function CommentList() {
                 className="bi bi-trash-fill"
               ></i>
             </div>
+          )}
         </div>
       ))}
       {updateComment && (
-        <UpdateCommentModal
-          setUpdateComment={setUpdateComment}
-        />
+        <UpdateCommentModal setUpdateComment={setUpdateComment} />
       )}
     </div>
-  )
+  );
 }
 
 export default CommentList
