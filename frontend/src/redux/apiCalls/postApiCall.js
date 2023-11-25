@@ -13,3 +13,27 @@ export function fetchPosts(pageNumber) {
         }
     }
 }
+
+// Get Posts Count
+export function getPostsCount() {
+    return async (dispatch) => {
+        try {
+            const { data } = await request.get(`/api/posts/count`)
+            dispatch(postActions.setPostsCount(data))
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    }
+}
+
+// Fetch Posts Based On Category
+export function fetchPostsBasedOnCategory(category) {
+    return async (dispatch) => {
+        try {
+            const { data } = await request.get(`/api/posts?category=${category}`)
+            dispatch(postActions.setPostsCat(data))
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}

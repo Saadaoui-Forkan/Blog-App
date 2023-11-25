@@ -3,15 +3,15 @@ import './home.css'
 import { Link } from "react-router-dom";
 import PostList from '../../components/posts/PostList';
 import Sidebar from '../../components/sidebar/Sidebar';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts } from '../../redux/apiCalls/postApiCall';
 
 function Home() {
-  const didpatch = useDispatch()
+  const dispatch = useDispatch()
   const { posts } = useSelector(state => state.post)
 
   useEffect(()=>{
-    didpatch(fetchPosts(1))
+    dispatch(fetchPosts(1))
   }, [])
   return (
     <section className="home">

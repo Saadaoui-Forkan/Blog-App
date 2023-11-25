@@ -7,6 +7,7 @@ const {
   updatePostCtr,
   updatePostImageCtr,
   toggleLikeCtr,
+  getPostCountCtrl,
 } = require("../controllers/postsController");
 const photoUpload = require("../middlewares/photoUpload");
 const validateObjectId = require("../middlewares/validateObjectId");
@@ -17,6 +18,9 @@ router.post("/", verifyToken, photoUpload.single('image'), createPostCtr);
 
 //  /api/posts
 router.get("/", getAllPostsCtr);
+
+//  /api/posts/count
+router.get("/count", getPostCountCtrl)
 
 //  /api/posts/:id
 router.get('/:id', validateObjectId, getSinglePostCtr)

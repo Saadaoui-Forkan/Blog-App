@@ -101,9 +101,10 @@ const getAllPostsCtr = asyncHandler(async (req, res) => {
  * @method  GET
  * @access  public
  ------------------------------------------------*/
- module.exports.getPostCountCtrl = asyncHandler(async (req, res) => {
-  const count = await Post.count();
-  res.status(200).json(count);
+ const getPostCountCtrl = asyncHandler(async (req, res) => {
+  const countPosts = await Post.count();
+  // console.log(countPosts)
+  res.status(200).json(countPosts);
 });
 
 /**-----------------------------------------------
@@ -270,4 +271,5 @@ module.exports = {
   updatePostCtr,
   updatePostImageCtr,
   toggleLikeCtr,
+  getPostCountCtrl
 };
