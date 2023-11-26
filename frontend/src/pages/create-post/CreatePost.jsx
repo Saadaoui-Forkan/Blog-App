@@ -5,10 +5,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { createPost } from '../../redux/apiCalls/postApiCall';
 import { useNavigate } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
+import { fetchCategories } from '../../redux/apiCalls/categoryApiCall';
 
 function CreatePost() {
   const dispatch = useDispatch();
   const { loading, isPostcreated } = useSelector((state) => state.post);
+  const { categories } = useSelector((state) => state.category);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,6 +42,10 @@ function CreatePost() {
     }
   }, [ isPostcreated, navigate])
 
+  useEffect(()=>{
+    dispatch(fetchCategories())
+  }, [])
+
   return (
     <section className="create-post">
       <h1 className="create-post-title">Create New Post</h1>
@@ -59,12 +65,13 @@ function CreatePost() {
           <option disabled value="">
             Select A Category
           </option>
-            <option value="music">
-              music
-            </option>
-            <option value="coffee">
-              coffee
-            </option>
+          {
+            categories.map((cat, i) => (
+              <option value={cat} key={i}>
+                {cat}
+              </option>
+            ))
+          }
         </select>
         <textarea
           className="create-post-textarea"

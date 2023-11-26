@@ -1,20 +1,27 @@
-import React from 'react'
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./sidebar.css";
-import { categories } from '../../dummyData';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
 
 function Sidebar() {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
   return (
     <div className="sidebar">
       <h5 className="sidebar-title">CATEGORIES</h5>
       <ul className="sidebar-links">
-        {categories.map((category) => (
+        {categories.map((category, i) => (
           <Link
             className="sidebar-link"
-            key={category._id}
-            to={`/posts/categories/${category.title}`}
+            key={i}
+            to={`/posts/categories/${category}`}
           >
-            {category.title}
+            {category}
           </Link>
         ))}
       </ul>

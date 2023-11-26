@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { Category, validateCreateCategory } = require("../models/Category");
+const { Post } = require("../models/Post");
 
 /**-----------------------------------------------
  * @desc    Create New Category
@@ -28,7 +29,13 @@ module.exports.createCategoryCtrl = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
 module.exports.getAllCategoriesCtrl = asyncHandler(async (req, res) => {
-  const categories = await Category.find();
+  const postCategories = await Post.find().select("category");
+  let categories = [];
+  postCategories.forEach((el) => categories.push(el.category));
+  categories = categories.filter(
+    (el, index) => categories.indexOf(el) !== index
+  );
+
   res.status(200).json(categories);
 });
 
