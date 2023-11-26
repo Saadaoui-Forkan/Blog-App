@@ -7,7 +7,7 @@ import swal from "sweetalert";
 import CommentList from "../../components/comments/CommentList";
 import UpdatePostModal from "./UpdatePostModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePost } from "../../redux/apiCalls/postApiCall";
+import { fetchSinglePost, toggleLikePost } from "../../redux/apiCalls/postApiCall";
 
 function PostDetails() {
   const dispatch = useDispatch();
@@ -107,7 +107,16 @@ function PostDetails() {
       </p>
       <div className="post-details-icon-wrapper">
         <div>
-          {user && <i className="bi bi-hand-thumbs-up"></i>}
+          {user && (
+            <i
+              onClick={() => dispatch(toggleLikePost(post?._id))}
+              className={
+                post?.likes.includes(user?._id)
+                  ? "bi bi-hand-thumbs-up-fill"
+                  : "bi bi-hand-thumbs-up"
+              }
+            ></i>
+          )}
           <small>{post?.likes.length} likes</small>
         </div>
         {user?._id === post?.user?._id && (

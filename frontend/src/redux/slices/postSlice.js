@@ -35,6 +35,9 @@ const postSlice = createSlice({
     },
     setPost(state, action) {
       state.post = action.payload
+    },
+    setLike(state, action) {
+      state.post.likes = action.payload.likes
     }
   },
 });
