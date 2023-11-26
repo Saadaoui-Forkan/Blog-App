@@ -2,11 +2,15 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./update-post.css";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePost } from "../../redux/apiCalls/postApiCall";
 
-function UpdatePostModal({ setUpdatePost }) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
+function UpdatePostModal({ setUpdatePost, post }) {
+  const dispatch = useDispatch();
+
+  const [title, setTitle] = useState(post?.title);
+  const [category, setCategory] = useState(post?.category);
+  const [description, setDescription] = useState(post?.description);
 
   // Form Submit Handler
   const formSubmitHandler = (e) => {
@@ -15,7 +19,7 @@ function UpdatePostModal({ setUpdatePost }) {
     if (category.trim() === "") return toast.error("Post Category is required");
     if (description.trim() === "")
       return toast.error("Post Description is required");
-    console.log({title}, {category},{description})
+    dispatch(updatePost({ title, category, description }, post?._id))
     setUpdatePost(false);
   };
   return (

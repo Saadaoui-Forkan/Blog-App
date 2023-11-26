@@ -7,9 +7,10 @@ import swal from "sweetalert";
 import CommentList from "../../components/comments/CommentList";
 import UpdatePostModal from "./UpdatePostModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePost, toggleLikePost } from "../../redux/apiCalls/postApiCall";
+import { deletePost, fetchSinglePost, toggleLikePost, updatePostImage } from "../../redux/apiCalls/postApiCall";
 
 function PostDetails() {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.auth);
@@ -28,7 +29,11 @@ function PostDetails() {
   const updateImageSubmitHandler = (e) => {
     e.preventDefault();
     if (!file) return toast.warning("There is no file");
-    console.log(file)
+
+    const formData = new FormData();
+    formData.append("image", file);
+    dispatch(updatePostImage(formData, post?._id))
+    
   };
 
   // Delete Post Handler
@@ -39,11 +44,10 @@ function PostDetails() {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal('post has been deleted', {
-          icon: "success"
-        })
+    }).then((isOk) => {
+      if (isOk) {
+        dispatch(deletePost(post?._id))
+        navigate(`/profile/${user?._id}`)
       }else {
         swal("something went wrong")
       }
