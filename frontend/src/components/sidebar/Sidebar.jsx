@@ -15,13 +15,13 @@ function Sidebar() {
     <div className="sidebar">
       <h5 className="sidebar-title">CATEGORIES</h5>
       <ul className="sidebar-links">
-        {categories.map((category, i) => (
+        {categories.map((category) => (
           <Link
             className="sidebar-link"
-            key={i}
-            to={`/posts/categories/${category}`}
+            key={category?._id}
+            to={`/posts/categories/${category?.title}`}
           >
-            {category}
+            {category?.title}
           </Link>
         ))}
       </ul>

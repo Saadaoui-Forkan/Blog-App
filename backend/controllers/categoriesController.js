@@ -29,12 +29,7 @@ module.exports.createCategoryCtrl = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
 module.exports.getAllCategoriesCtrl = asyncHandler(async (req, res) => {
-  const postCategories = await Post.find().select("category");
-  let categories = [];
-  postCategories.forEach((el) => categories.push(el.category));
-  categories = categories.filter(
-    (el, index) => categories.indexOf(el) !== index
-  );
+  const categories = await Category.find();
 
   res.status(200).json(categories);
 });

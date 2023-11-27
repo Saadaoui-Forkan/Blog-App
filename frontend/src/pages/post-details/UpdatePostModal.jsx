@@ -52,9 +52,9 @@ function UpdatePostModal({ setUpdatePost, post }) {
           <option disabled value="">
             Select A Category
           </option>
-          {categories.map((category, i) => (
-            <option key={i} value={category}>
-              {category}
+          {categories.map((category) => (
+            <option key={category?._id} value={category?.title}>
+              {category?.title}
             </option>
           ))}
         </select>

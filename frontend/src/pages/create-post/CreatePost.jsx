@@ -66,9 +66,9 @@ function CreatePost() {
             Select A Category
           </option>
           {
-            categories.map((cat, i) => (
-              <option value={cat} key={i}>
-                {cat}
+            categories.map((cat) => (
+              <option value={cat?.title} key={cat?._id}>
+                {cat?.title}
               </option>
             ))
           }

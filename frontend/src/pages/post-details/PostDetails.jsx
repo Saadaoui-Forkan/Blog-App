@@ -133,7 +133,7 @@ function PostDetails() {
           </div>
         )}
       </div>
-      <AddComment />
+      <AddComment postId={post?._id}/>
       {/* {user ? (
         <AddComment postId={post?._id} />
       ) : (

@@ -41,6 +41,9 @@ const postSlice = createSlice({
     },
     deletePost(state, action) {
       state.posts = state.posts.filter(item => item._id !== action.payload)
+    },
+    addCommentToPost(state, action){
+      state.post.comments.push(action.payload)
     }
   },
 });
