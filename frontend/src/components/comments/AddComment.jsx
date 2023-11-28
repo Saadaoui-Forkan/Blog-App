@@ -8,14 +8,15 @@ import { createComment } from '../../redux/apiCalls/commntApiCall';
 function AddComment({ postId }) {
   const dispatch = useDispatch();
 
-    const [text, setText] = useState("");
+  const [text, setText] = useState("");
 
-    // Form Submit Handler
-    const formSubmitHandler = (e) => {
-        e.preventDefault();
-        if(text.trim() === "") return toast.error("Please write something");
-        dispatch(createComment({ text, postId }))
-    }
+  // Form Submit Handler
+  const formSubmitHandler = (e) => {
+    e.preventDefault();
+    if (text.trim() === "") return toast.error("Please write something");
+    dispatch(createComment({ text, postId }));
+    setText("");
+  };
   return (
     <form onSubmit={formSubmitHandler} className="add-comment">
       <input
@@ -32,4 +33,4 @@ function AddComment({ postId }) {
   );
 }
 
-export default AddComment
+export default AddComment;

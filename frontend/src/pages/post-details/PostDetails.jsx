@@ -133,14 +133,13 @@ function PostDetails() {
           </div>
         )}
       </div>
-      <AddComment postId={post?._id}/>
-      {/* {user ? (
+      {user ? (
         <AddComment postId={post?._id} />
       ) : (
         <p className="post-details-info-write">
           to write a comment you should login first
         </p>
-      )} */}
+      )}
 
       <CommentList comments={post?.comments} />
       {updatePost && (
