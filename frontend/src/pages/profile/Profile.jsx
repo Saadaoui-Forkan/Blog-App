@@ -7,17 +7,17 @@ import UpdateProfileModal from './UpdateProfileModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserProfile, uploadProfilePhoto } from '../../redux/apiCalls/profileApiCall'
 import { useParams } from 'react-router-dom'
-import { posts } from '../../dummyData'
 
 function Profile() {
-  const dispatch = useDispatch()
-  const { id } = useParams()
-  const {profile} = useSelector(state => state.profile)
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { profile } = useSelector((state) => state.profile);
+  const { user } = useSelector((state) => state.auth);
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
 
   useEffect(() => {
-    dispatch(getUserProfile(id))
+    dispatch(getUserProfile(id));
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -28,7 +28,7 @@ function Profile() {
 
     const formData = new FormData();
     formData.append("image", file);
-    dispatch(uploadProfilePhoto(formData))
+    dispatch(uploadProfilePhoto(formData));
   };
 
   // Delete Account Handler
@@ -40,13 +40,13 @@ function Profile() {
       buttons: true,
       dangerMode: true,
     }).then((willDelete) => {
-        if (willDelete) {
-          swal('Account has been deleted', {
-            icon: "success"
-          })
-        }else {
-          swal("something went wrong")
-        }
+      if (willDelete) {
+        swal("Account has been deleted", {
+          icon: "success",
+        });
+      } else {
+        swal("something went wrong");
+      }
     });
   };
 
@@ -59,24 +59,26 @@ function Profile() {
             alt="user-avatar"
             className="profile-image"
           />
-          <form onSubmit={formSubmitHandler}>
-            <abbr title="choose profile photo">
-              <label
-                htmlFor="file"
-                className="bi bi-camera-fill upload-profile-photo-icon"
-              ></label>
-            </abbr>
-            <input
-              style={{ display: "none" }}
-              type="file"
-              name="file"
-              id="file"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <button className="upload-profile-photo-btn" type="submit">
-              upload
-            </button>
-          </form>
+          {user?._id === profile?._id && (
+            <form onSubmit={formSubmitHandler}>
+              <abbr title="choose profile photo">
+                <label
+                  htmlFor="file"
+                  className="bi bi-camera-fill upload-profile-photo-icon"
+                ></label>
+              </abbr>
+              <input
+                style={{ display: "none" }}
+                type="file"
+                name="file"
+                id="file"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <button className="upload-profile-photo-btn" type="submit">
+                upload
+              </button>
+            </form>
+          )}
         </div>
         <h1 className="profile-username">{profile?.username}</h1>
         <p className="profile-bio">{profile?.bio}</p>
@@ -84,28 +86,36 @@ function Profile() {
           <strong>Date Joined: </strong>
           <span>{new Date(profile?.createdAt).toDateString()}</span>
         </div>
-
-        <button
-          onClick={() => setUpdateProfile(true)}
-          className="profile-update-btn"
-        >
-          <i className="bi bi-file-person-fill"></i>
-          Update Profile
-        </button>
+        {user?._id === profile?._id && (
+          <button
+            onClick={() => setUpdateProfile(true)}
+            className="profile-update-btn"
+          >
+            <i className="bi bi-file-person-fill"></i>
+            Update Profile
+          </button>
+        )}
       </div>
       <div className="profile-posts-list">
         <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
-        {posts.map((post, index) => (
-          <PostItem key={index} post={post} />
+        {profile?.posts.map((post, index) => (
+          <PostItem
+            key={index}
+            post={post}
+            username={profile?.username}
+            userId={profile?._id}
+          />
         ))}
       </div>
-      <button className="delete-account-btn" onClick={deleteAccountHandler}>
-        Delete Your Account
-      </button>
+      {user?._id === profile?._id && (
+        <button className="delete-account-btn" onClick={deleteAccountHandler}>
+          Delete Your Account
+        </button>
+      )}
       {updateProfile && (
         <UpdateProfileModal
-          profile = { profile }
-          setUpdateProfile = { setUpdateProfile }
+          profile={profile}
+          setUpdateProfile={setUpdateProfile}
         />
       )}
     </section>
