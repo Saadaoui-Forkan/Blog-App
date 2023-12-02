@@ -122,7 +122,7 @@ function Profile() {
       </div>
       <div className="profile-posts-list">
         <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
-        {profile?.posts.map((post, index) => (
+        {profile?.posts?.map((post, index) => (
           <PostItem
             key={index}
             post={post}
