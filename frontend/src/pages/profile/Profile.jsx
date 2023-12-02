@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import './profile.css'
-import PostItem from '../../components/posts/PostItem'
-import { toast } from 'react-toastify'
+import { useState, useEffect } from 'react';
+import './profile.css';
+import PostItem from '../../components/posts/PostItem';
+import { toast } from 'react-toastify';
 import swal from "sweetalert";
-import UpdateProfileModal from './UpdateProfileModal'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUserProfile, uploadProfilePhoto } from '../../redux/apiCalls/profileApiCall'
-import { useParams } from 'react-router-dom'
+import UpdateProfileModal from './UpdateProfileModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile, uploadProfilePhoto, deleteProfile } from '../../redux/apiCalls/profileApiCall';
+import { logoutUser } from "../../redux/apiCalls/authApiCall";
+import { useNavigate, useParams } from 'react-router-dom';
+import { Oval } from "react-loader-spinner";
 
 function Profile() {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { profile } = useSelector((state) => state.profile);
+  const { profile, loading, isProfileDeleted } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.auth);
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
@@ -20,6 +22,13 @@ function Profile() {
     dispatch(getUserProfile(id));
     window.scrollTo(0, 0);
   }, [id]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(isProfileDeleted) {
+      navigate("/");
+    }
+  }, [navigate, isProfileDeleted]);
 
   // Form Submit Handler
   const formSubmitHandler = (e) => {
@@ -39,16 +48,31 @@ function Profile() {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Account has been deleted", {
-          icon: "success",
-        });
-      } else {
-        swal("something went wrong");
+    }).then((isOk) => {
+      if (isOk) {
+        dispatch(deleteProfile(user?._id));
+        dispatch(logoutUser());
       }
     });
   };
+
+  if(loading) {
+    return (
+    <div className="profile-loader">
+      <Oval
+        height={120}
+        width={120}
+        color="#000"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+        ariaLabel='oval-loading'
+        secondaryColor="grey"
+        strokeWidth={3}
+        strokeWidthSecondary={3}
+        />
+    </div>
+  )}
 
   return (
     <section className="profile">

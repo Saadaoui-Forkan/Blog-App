@@ -157,7 +157,9 @@ const validateUpdateUserCtr = asyncHandler(async (req, res) => {
   }
 
   // 5.delete the profile picture from cloudinary
-  await cloudinaryRemoveImage(user.profilePhoto.publicId)
+  if (user.profilePhoto.publicId !== null) {
+    await cloudinaryRemoveImage(user.profilePhoto.publicId)
+  }
 
   // 6.delete user posts & comments
   await Post.deleteMany({ user: user._id })
