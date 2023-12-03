@@ -44,8 +44,8 @@ export function deleteComment(commentId) {
             Authorization: "Bearer " + getState().auth.user.token,
         }
       });
-      dispatch(postActions.deleteCommentFromPost(commentId));
       dispatch(commentActions.deleteComment(commentId));
+      dispatch(postActions.deleteCommentFromPost(commentId));
     } catch (error) {
       toast.error(error.response.data.message)
     }
