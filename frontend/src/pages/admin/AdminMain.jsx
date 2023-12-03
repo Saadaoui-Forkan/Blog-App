@@ -3,20 +3,23 @@ import AddCategoryForm from "./AddCategoryForm";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
+import { getUsersCount } from "../../redux/apiCalls/profileApiCall";
 
 function AdminMain() {
   const dispatch = useDispatch()
   const { categories } = useSelector(state => state.category)
+  const { usersCount } = useSelector(state => state.profile)
 
   useEffect(()=>{
     dispatch(fetchCategories())
+    dispatch(getUsersCount())
   }, [])
   return (
     <div className="amdin-main">
       <div className="admin-main-header">
         <div className="admin-main-card">
           <h5 className="admin-card-title">Users</h5>
-          <div className="admin-card-count">120</div>
+          <div className="admin-card-count">{usersCount}</div>
           <div className="admin-card-link-wrapper">
             <Link to="/admin-dashboard/users-table" className="admin-card-link">
               See all users

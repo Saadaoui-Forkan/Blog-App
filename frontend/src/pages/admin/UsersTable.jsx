@@ -1,12 +1,24 @@
-import React from "react";
 import AdminSidebar from "./AdminSidebar";
+import "./admin-table.css";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
-import "./admin-table.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  deleteProfile,
+  getAllUsersProfile,
+} from "../../redux/apiCalls/profileApiCall";
 
-function UsersTable() {
+const UsersTable = () => {
+  const dispatch = useDispatch();
+  const { profiles, isProfileDeleted } = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    dispatch(getAllUsersProfile());
+  }, [isProfileDeleted]);
+
   // Delete User Handler
-  const deleteUserHandler = () => {
+  const deleteUserHandler = (userId) => {
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this user!",
@@ -15,14 +27,11 @@ function UsersTable() {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        swal("user has been deleted", {
-          icon: "success",
-        });
-      } else {
-        swal("something went wrong");
+        dispatch(deleteProfile(userId));
       }
     });
   };
+
   return (
     <section className="table-container">
       <AdminSidebar />
@@ -38,26 +47,26 @@ function UsersTable() {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
-              <tr key={item}>
-                <td>{item}</td>
+            {profiles.map((item, index) => (
+              <tr key={item._id}>
+                <td>{index + 1}</td>
                 <td>
                   <div className="table-image">
                     <img
-                      src={"/images/user-avatar.png"}
+                      src={item.profilePhoto?.url}
                       alt=""
                       className="table-user-image"
                     />
-                    <span className="table-username">Mahmoud</span>
+                    <span className="table-username">{item.username}</span>
                   </div>
                 </td>
-                <td>mhd@me.com</td>
+                <td>{item.email}</td>
                 <td>
                   <div className="table-button-group">
                     <button>
-                      <Link to={`/profile/1`}>View Profile</Link>
+                      <Link to={`/profile/${item._id}`}>View Profile</Link>
                     </button>
-                    <button onClick={() => deleteUserHandler()}>
+                    <button onClick={() => deleteUserHandler(item._id)}>
                       Delete User
                     </button>
                   </div>
@@ -69,6 +78,6 @@ function UsersTable() {
       </div>
     </section>
   );
-}
+};
 
 export default UsersTable;
