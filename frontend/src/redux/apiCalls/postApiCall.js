@@ -94,17 +94,13 @@ export function toggleLikePost(postId) {
 export function updatePostImage(newImage, postId) {
   return async (dispatch, getState) => {
     try {
-       await request.put(
-        `/api/posts/update-image/${postId}`,
-        newImage,
-        {
-          headers: {
-            Authorization: "Bearer " + getState().auth.user.token,
-            "Content-Type": "multipart/form-data"
-          },
-        }
-      );
-      toast.success("New Post Image Uploaded Successfully")
+      await request.put(`/api/posts/update-image/${postId}`, newImage, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("New Post Image Uploaded Successfully");
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -113,40 +109,45 @@ export function updatePostImage(newImage, postId) {
 
 // Update Post
 export function updatePost(newPost, postId) {
-    return async (dispatch, getState) => {
-      try {
-        const { data } = await request.put(
-          `/api/posts/${postId}`,
-          newPost,
-          {
-            headers: {
-              Authorization: "Bearer " + getState().auth.user.token,
-            },
-          }
-        );
-        dispatch(postActions.setPost(data))
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    };
-  }
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await request.put(`/api/posts/${postId}`, newPost, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+      dispatch(postActions.setPost(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
 
-  // Delete Post
+// Delete Post
 export function deletePost(postId) {
-    return async (dispatch, getState) => {
-      try {
-        const { data } = await request.delete(
-          `/api/posts/${postId}`,
-          {
-            headers: {
-              Authorization: "Bearer " + getState().auth.user.token,
-            },
-          }
-        );
-        dispatch(postActions.deletePost(data.postId))
-        toast.success(data.message)
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    };
-  }
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await request.delete(`/api/posts/${postId}`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+      dispatch(postActions.deletePost(data.postId));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Get All Posts
+export function getAllPosts() {
+  return async (dispatch) => {
+    try {
+      const { data } = await request.get(`/api/posts`);
+      dispatch(postActions.setPosts(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}

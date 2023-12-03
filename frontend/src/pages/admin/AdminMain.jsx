@@ -4,15 +4,18 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
 import { getUsersCount } from "../../redux/apiCalls/profileApiCall";
+import { getPostsCount } from "../../redux/apiCalls/postApiCall";
 
 function AdminMain() {
   const dispatch = useDispatch()
   const { categories } = useSelector(state => state.category)
   const { usersCount } = useSelector(state => state.profile)
+  const { postsCount } = useSelector(state => state.post)
 
   useEffect(()=>{
     dispatch(fetchCategories())
     dispatch(getUsersCount())
+    dispatch(getPostsCount())
   }, [])
   return (
     <div className="amdin-main">
@@ -31,7 +34,7 @@ function AdminMain() {
         </div>
         <div className="admin-main-card">
           <h5 className="admin-card-title">Posts</h5>
-          <div className="admin-card-count">110</div>
+          <div className="admin-card-count">{postsCount}</div>
           <div className="admin-card-link-wrapper">
             <Link to="/admin-dashboard/posts-table" className="admin-card-link">
               See all posts
