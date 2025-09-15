@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const { Category, validateCreateCategory } = require("../models/Category");
-const { Post } = require("../models/Post");
 
 /**-----------------------------------------------
  * @desc    Create New Category
@@ -30,7 +29,6 @@ module.exports.createCategoryCtrl = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 module.exports.getAllCategoriesCtrl = asyncHandler(async (req, res) => {
   const categories = await Category.find();
-
   res.status(200).json(categories);
 });
 

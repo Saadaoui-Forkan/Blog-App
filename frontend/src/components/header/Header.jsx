@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./header.css";
 import HeaderLeft from "./HeaderLeft";
-import HeaderRight from "./HeaderRight.jsx";
+import HeaderRight from "./HeaderRight";
 import Navbar from "./Navbar";
 
 const Header = () => {

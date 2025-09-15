@@ -6,36 +6,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/apiCalls/authApiCall";
 import swal from "sweetalert";
 
-function Register() {
-    const dispatch = useDispatch()
-    const { registerMessage } = useSelector(state => state.auth)
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+const Register = () => {
+    const dispatch = useDispatch();
+    const { registerMessage } = useSelector(state => state.auth);
 
-  // Form Submit Handler
-  const formSubmitHandler = (e) => {
-    e.preventDefault();
-    if(username.trim() === "") return toast.error("Username is required");
-    if(email.trim() === "") return toast.error("Email is required");
-    if(password.trim() === "") return toast.error("Password is required");
-    dispatch(registerUser({ username, email, password }))
-}
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-if (registerMessage) {
-    swal({
-        title: registerMessage,
-        icon: "success"
-    }).then(isOk => {
-        if (isOk) {
-            navigate('/login')
-        }
-    })
-}
+    // Form Submit Handler
+    const formSubmitHandler = (e) => {
+        e.preventDefault();
+        if(username.trim() === "") return toast.error("Username is required");
+        if(email.trim() === "") return toast.error("Email is required");
+        if(password.trim() === "") return toast.error("Password is required");
 
-  return (
-    <section className="form-container">
+        dispatch(registerUser({ username, email, password }))
+    }
+
+    const navigate = useNavigate();
+
+    if(registerMessage) {
+        swal({
+            title: registerMessage,
+            icon: "success"
+        }).then(isOk => {
+            if(isOk) {
+               navigate("/login");
+            }
+        })
+    }
+
+
+    return ( 
+        <section className="form-container">
             <h1 className="form-title">Create new account</h1>
             <form onSubmit={formSubmitHandler} className="form">
                 <div className="form-group">
@@ -85,7 +89,7 @@ if (registerMessage) {
                 Already have an account? <Link to="/login">Login</Link>
             </div>
         </section>
-  )
+     );
 }
-
-export default Register
+ 
+export default Register;

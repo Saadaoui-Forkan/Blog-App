@@ -1,5 +1,5 @@
-const path = require('path');
-const multer = require('multer')
+const path = require("path");
+const multer = require("multer");
 
 // Photo Storage
 const photoStorage = multer.diskStorage({
@@ -17,15 +17,15 @@ const photoStorage = multer.diskStorage({
 
 // Photo Upload Middleware
 const photoUpload = multer({
-    storage: photoStorage,
-    fileFilter: function(req, file, cb) {
-        if (file.mimetype.startsWith("image")) {
-            cb(null, true)
-        } else {
-            cb({ message: "Unsupported File Format" }, false)
-        }
-    },
-    limits: { fieldSize: 1024 * 1024 * 5 }
-})
+  storage: photoStorage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb({ message: "Unsupported file format" }, false);
+    }
+  },
+  limits: { fileSize: 1024 * 1024 }, // 1 megabyte
+});
 
-module.exports = photoUpload
+module.exports = photoUpload;

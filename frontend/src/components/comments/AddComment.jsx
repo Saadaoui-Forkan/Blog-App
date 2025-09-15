@@ -1,36 +1,37 @@
-import React from 'react'
 import "./add-comment.css";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { createComment } from '../../redux/apiCalls/commntApiCall';
+import { useDispatch } from "react-redux";
+import { createComment } from "../../redux/apiCalls/commentApiCall";
 
-function AddComment({ postId }) {
-  const dispatch = useDispatch();
+const AddComment = ({postId}) => {
+    const dispatch = useDispatch();
+   
+    const [text, setText] = useState("");
 
-  const [text, setText] = useState("");
+    // Form Submit Handler
+    const formSubmitHandler = (e) => {
+        e.preventDefault();
+        if(text.trim() === "") return toast.error("Please write something");
 
-  // Form Submit Handler
-  const formSubmitHandler = (e) => {
-    e.preventDefault();
-    if (text.trim() === "") return toast.error("Please write something");
-    dispatch(createComment({ text, postId }));
-    setText("");
-  };
-  return (
-    <form onSubmit={formSubmitHandler} className="add-comment">
-      <input
-        type="text"
-        placeholder="Add a comment"
-        className="add-comment-input"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button type="submit" className="add-comment-btn">
-        Comment
-      </button>
-    </form>
-  );
+        dispatch(createComment({ text, postId }));
+        setText("");
+    }
+
+    return ( 
+        <form onSubmit={formSubmitHandler} className="add-comment">
+            <input 
+             type="text" 
+             placeholder="Add a comment" 
+             className="add-comment-input"
+             value={text}
+             onChange={(e) => setText(e.target.value)}
+            />
+            <button type="submit" className="add-comment-btn">
+                Comment
+            </button>
+        </form>
+     );
 }
-
+ 
 export default AddComment;

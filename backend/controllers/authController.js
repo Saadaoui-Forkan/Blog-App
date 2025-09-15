@@ -1,44 +1,63 @@
-const { validateRegisterUser, User, validateLoginUser } = require('../models/User')
-const bcrypt = require('bcryptjs')
-const asyncHandler = require('express-async-handler')
+const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcryptjs");
+const {
+  User,
+  validateRegisterUser,
+  validateLoginUser,
+} = require("../models/User");
+const VerificationToken = require("../models/VerificationToken");
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+const { verificationEmailTemplateSimple, verificationEmailTemplateStyled } = require("../utils/htmlTemplates");
 
 /**-----------------------------------------------
  * @desc    Register New User
  * @route   /api/auth/register
  * @method  POST
  * @access  public
- ------------------------------------------------*/
-const registerUserController = async (req, res) => {
-    const { error } = validateRegisterUser(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
+------------------------------------------------*/
+module.exports.registerUserCtrl = asyncHandler(async (req, res) => {
+  const { error } = validateRegisterUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
-    const { username, email, password } = req.body;
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+    return res.status(400).json({ message: "user already exist" });
+  }
 
-    try {
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: "User Already Exist" });
-        }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+  user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: hashedPassword,
+  });
+  await user.save();
 
-        user = new User({
-            username,
-            email,
-            password: hashedPassword,
-        });
-        await user.save();
+  // Creating new VerificationToken & save it toDB
+  const verifictionToken = new VerificationToken({
+    userId: user._id,
+    token: crypto.randomBytes(32).toString("hex"),
+  });
+  await verifictionToken.save();
 
-        res.send({ message: "success" });
+  // Making the link
+  const link = `${process.env.CLIENT_DOMAIN}/users/${user._id}/verify/${verifictionToken.token}`;
 
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send("Server error");
-    }
-}; 
+  // Putting the link into an html template
+  const htmlTemplate = verificationEmailTemplateSimple(link);
+
+  // Sending email to the user
+  await sendEmail(user.email, "Verify Your Email", htmlTemplate);
+
+  // Response to the client
+  res.status(201).json({
+    message: "We sent to you an email, please verify your email address",
+  });
+});
 
 /**-----------------------------------------------
  * @desc    Login User
@@ -46,43 +65,84 @@ const registerUserController = async (req, res) => {
  * @method  POST
  * @access  public
  ------------------------------------------------*/
- const loginUserController = asyncHandler(async(req,res)=> {
-    const { error } = validateLoginUser(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
+module.exports.loginUserCtrl = asyncHandler(async (req, res) => {
+  const { error } = validateLoginUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(400).json({ message: "invalid email or password" });
+  }
+
+  const isPasswordMatch = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (!isPasswordMatch) {
+    return res.status(400).json({ message: "invalid email or password" });
+  }
+
+  if (!user.isAccountVerified) {
+    let verificationToken = await VerificationToken.findOne({
+      userId: user._id,
+    });
+
+    if (!verificationToken) {
+      verificationToken = new VerificationToken({
+        userId: user._id,
+        token: crypto.randomBytes(32).toString("hex"),
+      });
+      await verificationToken.save();
     }
 
-    const { email, password } = req.body;
-    try {
-        let user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "Invalid Credentials" });
-        }
-        
-        const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid Credentials" });
-        }
+    const link = `${process.env.CLIENT_DOMAIN}/users/${user._id}/verify/${verificationToken.token}`;
 
-        // Generate Token
-        const token = user.generateAuthToken()
+    const htmlTemplate = verificationEmailTemplateStyled(link);
 
-        res.status(200).send({
-            _id: user._id,
-            isAdmin: user.isAdmin,
-            profilePhoto: user.profilePhoto,
-            username: user.username,
-            token
-        })
+    await sendEmail(user.email, "Verify Your Email", htmlTemplate);
 
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send("Server error");
-    }
+    return res.status(400).json({
+      message: "We sent to you an email, please verify your email address",
+    });
+  }
 
- })
+  const token = user.generateAuthToken();
+  res.status(200).json({
+    _id: user._id,
+    isAdmin: user.isAdmin,
+    profilePhoto: user.profilePhoto,
+    token,
+    username: user.username,
+  });
+});
 
- module.exports = {
-    registerUserController,
-    loginUserController,
- }
+/**-----------------------------------------------
+ * @desc    Verify User Account
+ * @route   /api/auth/:userId/verify/:token
+ * @method  GET
+ * @access  public
+ ------------------------------------------------*/
+module.exports.verifyUserAccountCtrl = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userId);
+  if (!user) {
+    return res.status(400).json({ message: "invalid link" });
+  }
+
+  const verificationToken = await VerificationToken.findOne({
+    userId: user._id,
+    token: req.params.token,
+  });
+
+  if (!verificationToken) {
+    return res.status(400).json({ message: "invalid link" });
+  }
+
+  user.isAccountVerified = true;
+  await user.save();
+
+  await verificationToken.remove();
+
+  res.status(200).json({ message: "Your account verified" });
+});

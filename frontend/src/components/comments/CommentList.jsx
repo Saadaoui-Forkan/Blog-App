@@ -1,23 +1,23 @@
 import "./comment-list.css";
-import { useState } from "react";
 import swal from "sweetalert";
+import { useState } from "react";
 import UpdateCommentModal from "./UpdateCommentModal";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment } from "../../redux/apiCalls/commntApiCall";
+import { deleteComment } from "../../redux/apiCalls/commentApiCall";
 
-function CommentList({ comments }) {
+const CommentList = ({ comments }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
-  const [updateComment, setUpdateComment] = useState(false)
-  const [commentForUpdate, setCommentForUpdate] = useState(null)
+  const [updateComment, setUpdateComment] = useState(false);
+  const [commentForUpdate, setCommentForUpdate] = useState(null);
 
   // Update Comment Handler
   const updateCommentHandler = (comment) => {
-    setCommentForUpdate(comment)
-    setUpdateComment(true)
-  }
+    setCommentForUpdate(comment);
+    setUpdateComment(true);
+  };
 
   // Delete Comment Handler
   const deleteCommentHandler = (commentId) => {
@@ -29,26 +29,27 @@ function CommentList({ comments }) {
       dangerMode: true,
     }).then((isOk) => {
       if (isOk) {
-        dispatch(deleteComment(commentId))
+        dispatch(deleteComment(commentId));
       }
     });
   };
+
   return (
     <div className="comment-list">
-      <h4 className="comment-list-count">{comments?.length}</h4>
+      <h4 className="comment-list-count">{comments?.length} Comments</h4>
       {comments?.map((comment) => (
-        <div key={comment?._id} className="comment-item">
+        <div key={comment._id} className="comment-item">
           <div className="comment-item-info">
-            <div className="comment-item-username">{comment?.username}</div>
+            <div className="comment-item-username">{comment.username}</div>
             <div className="comment-item-time">
               <Moment fromNow ago>
-                {comment?.createdAt}
+                {comment.createdAt}
               </Moment>{" "}
               ago
             </div>
           </div>
-          <p className="comment-item-text">{comment?.text}</p>
-          {user?._id === comment?.user && (
+          <p className="comment-item-text">{comment.text}</p>
+          {user?._id === comment.user && (
             <div className="comment-item-icon-wrapper">
               <i
                 onClick={() => updateCommentHandler(comment)}
@@ -70,6 +71,6 @@ function CommentList({ comments }) {
       )}
     </div>
   );
-}
+};
 
-export default CommentList
+export default CommentList;

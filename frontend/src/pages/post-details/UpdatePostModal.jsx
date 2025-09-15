@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import "./update-post.css";
 import { toast } from "react-toastify";
@@ -6,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../../redux/apiCalls/postApiCall";
 import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
 
-function UpdatePostModal({ setUpdatePost, post }) {
+const UpdatePostModal = ({ setUpdatePost, post }) => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
 
-  const [title, setTitle] = useState(post?.title);
-  const [category, setCategory] = useState(post?.category);
-  const [description, setDescription] = useState(post?.description);
+  const [title, setTitle] = useState(post.title);
+  const [description, setDescription] = useState(post.description);
+  const [category, setCategory] = useState(post.category);
 
   // Form Submit Handler
   const formSubmitHandler = (e) => {
@@ -21,13 +20,15 @@ function UpdatePostModal({ setUpdatePost, post }) {
     if (category.trim() === "") return toast.error("Post Category is required");
     if (description.trim() === "")
       return toast.error("Post Description is required");
-    dispatch(updatePost({ title, category, description }, post?._id))
+
+    dispatch(updatePost({ title, category, description }, post?._id));
     setUpdatePost(false);
   };
 
-  useEffect(()=>{
-    dispatch(fetchCategories())
-  }, [])
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
   return (
     <div className="update-post">
       <form onSubmit={formSubmitHandler} className="update-post-form">
@@ -53,8 +54,8 @@ function UpdatePostModal({ setUpdatePost, post }) {
             Select A Category
           </option>
           {categories.map((category) => (
-            <option key={category?._id} value={category?.title}>
-              {category?.title}
+            <option key={category._id} value={category.title}>
+              {category.title}
             </option>
           ))}
         </select>
@@ -70,6 +71,6 @@ function UpdatePostModal({ setUpdatePost, post }) {
       </form>
     </div>
   );
-}
+};
 
 export default UpdatePostModal;

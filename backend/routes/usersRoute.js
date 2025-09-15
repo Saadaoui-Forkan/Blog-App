@@ -1,42 +1,37 @@
+const router = require("express").Router();
 const {
-  getUsersController,
-  getUserProfileCtr,
-  validateUpdateUserCtr,
-  getUsersCount,
-  profilePhotoUploadCtr,
-  deleteUserProfileCtr,
+  getAllUsersCtrl,
+  getUserProfileCtrl,
+  updateUserProfileCtrl,
+  getUsersCountCtrl,
+  profilePhotoUploadCtrl,
+  deleteUserProfileCtrl,
 } = require("../controllers/usersController");
-const photoUpload = require("../middlewares/photoUpload");
-const validateObjectId = require("../middlewares/validateObjectId");
 const {
   verifyTokenAndAdmin,
   verifyTokenAndOnlyUser,
   verifyToken,
   verifyTokenAndAuthorization,
 } = require("../middlewares/verifyToken");
-const router = require("express").Router();
+const validateObjectId = require("../middlewares/validateObjectId");
+const photoUpload = require("../middlewares/photoUpload");
 
 // /api/users/profile
-router.get("/profile", verifyTokenAndAdmin, getUsersController);
+router.route("/profile").get(verifyTokenAndAdmin, getAllUsersCtrl);
+
+// /api/users/profile/profile-photo-upload
+router
+  .route("/profile/profile-photo-upload")
+  .post(verifyToken, photoUpload.single("image"), profilePhotoUploadCtrl);
 
 // /api/users/profile/:id
-router.get("/profile/:id", validateObjectId, photoUpload.single("image"), getUserProfileCtr);
+router
+  .route("/profile/:id")
+  .get(validateObjectId, getUserProfileCtrl)
+  .put(validateObjectId, verifyTokenAndOnlyUser, updateUserProfileCtrl)
+  .delete(validateObjectId, verifyTokenAndAuthorization,deleteUserProfileCtrl);
 
-// /api/users/profile/:id
-router.put(
-  "/profile/:id",
-  validateObjectId,
-  verifyTokenAndOnlyUser,
-  validateUpdateUserCtr
-);
-
-//  /api/users/count
-router.get("/count", verifyTokenAndAdmin, getUsersCount);
-
-//  /api/users/profile/profile-photo-upload
-router.post("/profile/profile-photo-upload", verifyToken, photoUpload.single("image"), profilePhotoUploadCtr)
-
-//  /api/users/profile/:id
-router.delete("/profile/:id", validateObjectId, verifyTokenAndAuthorization, deleteUserProfileCtr)
+// /api/users/count
+router.route("/count").get(verifyTokenAndAdmin, getUsersCountCtrl);
 
 module.exports = router;

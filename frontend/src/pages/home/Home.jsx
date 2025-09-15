@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react'
-import './home.css'
+import PostList from "../../components/posts/PostList";
+import "./home.css";
+import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
-import PostList from '../../components/posts/PostList';
-import Sidebar from '../../components/sidebar/Sidebar';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../../redux/apiCalls/postApiCall';
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchPosts } from "../../redux/apiCalls/postApiCall";
 
-function Home() {
-  const dispatch = useDispatch()
-  const { posts } = useSelector(state => state.post)
+const Home = () => {
+  const dispatch = useDispatch();
+  const { posts } = useSelector(state => state.post);
 
-  useEffect(()=>{
-    dispatch(fetchPosts(1))
-  }, [])
+  useEffect(() => {
+    dispatch(fetchPosts(1));
+  }, []);
+
   return (
     <section className="home">
       <div className="home-hero-header">
@@ -32,6 +33,6 @@ function Home() {
       </div>
     </section>
   );
-}
+};
 
-export default Home
+export default Home;

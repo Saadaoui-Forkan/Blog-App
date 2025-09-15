@@ -3,14 +3,11 @@ import "./admin-table.css";
 import swal from "sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import {
-  deleteComment,
-  fetchAllComments,
-} from "../../redux/apiCalls/commntApiCall";
+import { deleteComment, fetchAllComments } from "../../redux/apiCalls/commentApiCall";
 
 const CommentsTable = () => {
   const dispatch = useDispatch();
-  const { comments } = useSelector((state) => state.comment);
+  const { comments } = useSelector(state => state.comment);
 
   useEffect(() => {
     dispatch(fetchAllComments());
@@ -46,7 +43,7 @@ const CommentsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {comments.map((item, index) => (
+            {comments.map((item,index) => (
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
@@ -56,7 +53,9 @@ const CommentsTable = () => {
                       alt=""
                       className="table-user-image"
                     />
-                    <span className="table-username">{item.user.username}</span>
+                    <span className="table-username">
+                      {item.user.username}
+                    </span>
                   </div>
                 </td>
                 <td>{item.text}</td>

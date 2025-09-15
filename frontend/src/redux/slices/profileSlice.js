@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const profileSlice = createSlice({
-  name: "post",
+  name: "profile",
   initialState: {
     profile: null,
     loading: false,
     isProfileDeleted: false,
-    usersCount : null,
+    usersCount:null,
     profiles: [],
   },
   reducers: {
     setProfile(state, action) {
-      state.profile = action.payload
+      state.profile = action.payload;
     },
     setProfilePhoto(state, action) {
-      state.profile.profilePhoto = action.payload
+      state.profile.profilePhoto = action.payload;
     },
-    updateProfile(state, action) {
-      state.profile = action.payload
+    updateProfile(state,action) {
+      state.profile = action.payload;
     },
     setLoading(state) {
       state.loading = true;
@@ -44,4 +44,4 @@ const profileSlice = createSlice({
 const profileReducer = profileSlice.reducer;
 const profileActions = profileSlice.actions;
 
-export {profileActions, profileReducer}
+export { profileActions, profileReducer };

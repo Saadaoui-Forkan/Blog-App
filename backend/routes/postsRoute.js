@@ -1,40 +1,39 @@
 const router = require("express").Router();
 const {
-  createPostCtr,
-  getAllPostsCtr,
-  getSinglePostCtr,
-  deletePostCtr,
-  updatePostCtr,
-  updatePostImageCtr,
-  toggleLikeCtr,
+  createPostCtrl,
+  getAllPostsCtrl,
+  getSinglePostCtrl,
   getPostCountCtrl,
+  deletePostCtrl,
+  updatePostCtrl,
+  updatePostImageCtrl,
+  toggleLikeCtrl,
 } = require("../controllers/postsController");
 const photoUpload = require("../middlewares/photoUpload");
+const { verifyToken } = require("../middlewares/verifyToken");
 const validateObjectId = require("../middlewares/validateObjectId");
-const { verifyToken, verifyTokenAndAuthorization } = require("../middlewares/verifyToken");
 
 // /api/posts
-router.post("/", verifyToken, photoUpload.single('image'), createPostCtr);
+router
+  .route("/")
+  .post(verifyToken, photoUpload.single("image"), createPostCtrl)
+  .get(getAllPostsCtrl);
 
-//  /api/posts
-router.get("/", getAllPostsCtr);
+// /api/posts/count
+router.route("/count").get(getPostCountCtrl);
 
-//  /api/posts/count
-router.get("/count", getPostCountCtrl)
+// /api/posts/:id
+router
+  .route("/:id")
+  .get(validateObjectId, getSinglePostCtrl)
+  .delete(validateObjectId, verifyToken, deletePostCtrl)
+  .put(validateObjectId, verifyToken, updatePostCtrl);
 
-//  /api/posts/:id
-router.get('/:id', validateObjectId, getSinglePostCtr)
+// /api/posts/update-image/:id
+router.route("/update-image/:id")
+    .put(validateObjectId, verifyToken, photoUpload.single("image"), updatePostImageCtrl);
 
-//  /api/posts/:id
-router.delete('/:id', validateObjectId, verifyTokenAndAuthorization, deletePostCtr)
+// /api/posts/like/:id
+router.route("/like/:id").put(validateObjectId, verifyToken, toggleLikeCtrl);
 
-//  /api/posts/:id
-router.put('/:id', validateObjectId, verifyToken, updatePostCtr)
-
-//  /api/posts/update-image/:id
-router.put('/update-image/:id', validateObjectId, verifyToken, photoUpload.single('image'), updatePostImageCtr)
-
-//  /api/posts/like/:id
-router.put('/like/:id', validateObjectId, verifyToken, toggleLikeCtr)
-
-module.exports = router
+module.exports = router;

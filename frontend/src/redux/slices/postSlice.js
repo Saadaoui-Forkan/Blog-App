@@ -5,10 +5,10 @@ const postSlice = createSlice({
   initialState: {
     posts: [],
     postsCount: null,
-    postsCat: [],
+    postsCate: [],
     loading: false,
-    isPostcreated: false,
-    post: null,
+    isPostCreated: false,
+    post:null,
   },
   reducers: {
     setPosts(state, action) {
@@ -17,8 +17,8 @@ const postSlice = createSlice({
     setPostsCount(state, action) {
       state.postsCount = action.payload;
     },
-    setPostsCat(state, action) {
-      state.postsCat = action.payload;
+    setPostsCate(state, action) {
+      state.postsCate = action.payload;
     },
     setLoading(state) {
       state.loading = true;
@@ -27,34 +27,34 @@ const postSlice = createSlice({
       state.loading = false;
     },
     setIsPostCreated(state) {
-      state.isPostcreated = true;
+      state.isPostCreated = true;
       state.loading = false;
     },
     clearIsPostCreated(state) {
-      state.isPostcreated = false;
+      state.isPostCreated = false;
     },
-    setPost(state, action) {
-      state.post = action.payload
+    setPost(state,action) {
+      state.post = action.payload;
     },
-    setLike(state, action) {
-      state.post.likes = action.payload.likes
+    setLike(state,action) {
+      state.post.likes = action.payload.likes;
     },
-    deletePost(state, action) {
-      state.posts = state.posts.filter(item => item._id !== action.payload)
+    deletePost(state,action) {
+      state.posts = state.posts.filter(p => p._id !== action.payload);
     },
-    addCommentToPost(state, action){
-      state.post.comments.push(action.payload)
+    addCommentToPost(state,action) {
+      state.post.comments.push(action.payload);
     },
-    updateCommentPost(state, action) {
-      state.post.comments = state.post.comments.map(comment => 
-        comment._id === action.payload._id ? action.payload : comment  
+    updateCommentPost(state,action) {
+      state.post.comments = state.post.comments.map(commment => 
+        commment._id === action.payload._id ? action.payload : commment
       )
     },
     deleteCommentFromPost(state, action) {
-      const comment = state.post.comments.find(c => c._id === action.payload)
+      const comment = state.post.comments.find(c => c._id === action.payload);
       const commentIndex = state.post.comments.indexOf(comment);
 
-      state.post.comments.splice(commentIndex, 1)
+      state.post.comments.splice(commentIndex, 1);
     }
   },
 });
@@ -62,4 +62,4 @@ const postSlice = createSlice({
 const postReducer = postSlice.reducer;
 const postActions = postSlice.actions;
 
-export {postActions, postReducer}
+export { postActions, postReducer };

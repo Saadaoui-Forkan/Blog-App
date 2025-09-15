@@ -1,22 +1,28 @@
-import { useState, useEffect } from 'react';
-import './profile.css';
-import PostItem from '../../components/posts/PostItem';
-import { toast } from 'react-toastify';
+import "./profile.css";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams,useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import UpdateProfileModal from './UpdateProfileModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUserProfile, uploadProfilePhoto, deleteProfile } from '../../redux/apiCalls/profileApiCall';
-import { logoutUser } from "../../redux/apiCalls/authApiCall";
-import { useNavigate, useParams } from 'react-router-dom';
+import UpdateProfileModal from "./UpdateProfileModal";
+import {
+  deleteProfile,
+  getUserProfile,
+  uploadProfilePhoto,
+} from "../../redux/apiCalls/profileApiCall";
+import PostItem from "../../components/posts/PostItem";
 import { Oval } from "react-loader-spinner";
+import { logoutUser } from "../../redux/apiCalls/authApiCall";
 
-function Profile() {
+const Profile = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const { profile, loading, isProfileDeleted } = useSelector((state) => state.profile);
+  const { profile,loading,isProfileDeleted } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.auth);
+
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
+
+  const { id } = useParams();
 
   useEffect(() => {
     dispatch(getUserProfile(id));
@@ -37,6 +43,7 @@ function Profile() {
 
     const formData = new FormData();
     formData.append("image", file);
+
     dispatch(uploadProfilePhoto(formData));
   };
 
@@ -79,8 +86,8 @@ function Profile() {
       <div className="profile-header">
         <div className="profile-image-wrapper">
           <img
-            src={file ? URL.createObjectURL(file) : profile?.profilePhoto.url}
-            alt="user-avatar"
+            src={file ? URL.createObjectURL(file) : profile?.profilePhoto?.url}
+            alt=""
             className="profile-image"
           />
           {user?._id === profile?._id && (
@@ -122,9 +129,9 @@ function Profile() {
       </div>
       <div className="profile-posts-list">
         <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
-        {profile?.posts?.map((post, index) => (
+        {profile?.posts?.map((post) => (
           <PostItem
-            key={index}
+            key={post._id}
             post={post}
             username={profile?.username}
             userId={profile?._id}
@@ -132,7 +139,7 @@ function Profile() {
         ))}
       </div>
       {user?._id === profile?._id && (
-        <button className="delete-account-btn" onClick={deleteAccountHandler}>
+        <button onClick={deleteAccountHandler} className="delete-account-btn">
           Delete Your Account
         </button>
       )}
@@ -144,6 +151,6 @@ function Profile() {
       )}
     </section>
   );
-}
+};
 
-export default Profile
+export default Profile;
