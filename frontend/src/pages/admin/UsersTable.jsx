@@ -15,7 +15,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     dispatch(getAllUsersProfile());
-  }, [isProfileDeleted]);
+  }, [isProfileDeleted, dispatch]);
 
   // Delete User Handler
   const deleteUserHandler = (userId) => {

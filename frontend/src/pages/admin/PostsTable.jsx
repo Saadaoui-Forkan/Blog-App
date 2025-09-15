@@ -12,7 +12,7 @@ const PostsTable = () => {
 
     useEffect(() => {
      dispatch(getAllPosts());
-    }, []);
+    }, [dispatch]);
 
   // Delete Post Handler
   const deletePostHandler = (postId) => {

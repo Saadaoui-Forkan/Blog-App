@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     dispatch(fetchCategories());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="sidebar">

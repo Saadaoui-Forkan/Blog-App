@@ -18,7 +18,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     dispatch(getResetPassword(userId, token));
-  }, [userId, token]);
+  }, [userId, token, dispatch]);
 
   // Form Submit Handler
   const formSubmitHandler = (e) => {

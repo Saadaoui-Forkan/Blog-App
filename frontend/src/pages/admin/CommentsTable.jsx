@@ -11,7 +11,7 @@ const CommentsTable = () => {
 
   useEffect(() => {
     dispatch(fetchAllComments());
-  }, []);
+  }, [dispatch]);
 
   // Delete Comment Handler
   const deleteCommentHandler = (commentId) => {

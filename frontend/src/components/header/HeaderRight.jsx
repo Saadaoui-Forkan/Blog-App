@@ -28,7 +28,7 @@ const HeaderRight = () => {
             </span>
             <img
               src={user?.profilePhoto?.url}
-              alt="user photo"
+              alt={user?.name ? `${user.name}'s profile picture` : 'User profile'}
               className="header-right-user-photo"
             />
             {dropdown && (

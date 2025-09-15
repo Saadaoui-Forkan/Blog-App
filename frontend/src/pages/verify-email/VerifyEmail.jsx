@@ -12,7 +12,7 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     dispatch(verifyEmail(userId, token));
-  }, [userId, token]);
+  }, [userId, token, dispatch]);
 
   return (
     <section className="verfiy-email">

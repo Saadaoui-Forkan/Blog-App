@@ -18,11 +18,11 @@ const PostsPage = () => {
   useEffect(() => {
     dispatch(fetchPosts(currentPage));
     window.scrollTo(0, 0);
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   useEffect(() => {
     dispatch(getPostsCount());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

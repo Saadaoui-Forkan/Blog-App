@@ -14,19 +14,19 @@ const Category = () => {
   useEffect(() => {
     dispatch(fetchPostsBasedOnCategory(category));
     window.scrollTo(0, 0);
-  }, [category]);
+  }, [category, dispatch]);
 
   return (
     <section className="category">
       {postsCate.length === 0 ? (
-        <>
-          <h1 className="category-not-found">
+        <div className="category-not-found-container">
+          <h1 className="category-not-found-title">
             Posts with <span>{category}</span> category not found
           </h1>
           <Link to="/posts" className="category-not-found-link">
             Go to posts page
           </Link>
-        </>
+        </div>
       ) : (
         <>
           <h1 className="category-title">Posts based on {category}</h1>

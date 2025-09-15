@@ -19,7 +19,7 @@ const AdminMain = () => {
      dispatch(getUsersCount());
      dispatch(getPostsCount());
      dispatch(fetchAllComments());
-    }, []);
+    }, [dispatch]);
 
     return ( 
         <div className="amdin-main">

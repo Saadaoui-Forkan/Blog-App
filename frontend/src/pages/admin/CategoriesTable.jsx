@@ -11,7 +11,7 @@ const CategoriesTable = () => {
 
   useEffect(() => {
     dispatch(fetchCategories());
-  }, []);
+  }, [dispatch]);
 
   // Delete Category Handler
   const deleteCategoryHandler = (categoryId) => {
