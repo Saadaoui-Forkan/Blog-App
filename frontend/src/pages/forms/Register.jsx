@@ -5,10 +5,11 @@ import "./form.css";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/apiCalls/authApiCall";
 import swal from "sweetalert";
+import { RotatingLines } from "react-loader-spinner";
 
 const Register = () => {
     const dispatch = useDispatch();
-    const { registerMessage } = useSelector(state => state.auth);
+    const { registerMessage, loading } = useSelector(state => state.auth);
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -81,8 +82,16 @@ const Register = () => {
                      onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <button className="form-btn" type="submit">
-                    Register
+                <button className="form-btn" type="submit" disabled={loading}>
+                    {loading ? (
+                        <RotatingLines
+                          strokeColor="white"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="25"
+                          visible={true}
+                        />
+                    ) : "Register"}
                 </button>
             </form>
             <div className="form-footer">

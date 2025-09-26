@@ -46,8 +46,8 @@ const postSlice = createSlice({
       state.post.comments.push(action.payload);
     },
     updateCommentPost(state,action) {
-      state.post.comments = state.post.comments.map(commment => 
-        commment._id === action.payload._id ? action.payload : commment
+      state.post.comments = state.post.comments.map(comment => 
+        comment._id === action.payload._id ? action.payload : comment
       )
     },
     deleteCommentFromPost(state, action) {

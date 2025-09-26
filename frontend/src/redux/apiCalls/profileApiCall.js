@@ -19,6 +19,7 @@ export function getUserProfile(userId) {
 export function uploadProfilePhoto(newPhoto) {
   return async (dispatch, getState) => {
     try {
+      dispatch(authActions.setLoading(true));
       const { data } = await request.post(
         `/api/users/profile/profile-photo-upload`,
         newPhoto,
@@ -39,6 +40,7 @@ export function uploadProfilePhoto(newPhoto) {
       user.profilePhoto = data?.profilePhoto;
       localStorage.setItem("userInfo", JSON.stringify(user));
     } catch (error) {
+      dispatch(authActions.setLoading(false));
       toast.error(error.response.data.message);
     }
   };
@@ -48,6 +50,7 @@ export function uploadProfilePhoto(newPhoto) {
 export function updateProfile(userId,profile) {
   return async (dispatch, getState) => {
     try {
+      dispatch(authActions.setLoading(true));
       const { data } = await request.put(
         `/api/users/profile/${userId}`,
         profile,
@@ -66,6 +69,7 @@ export function updateProfile(userId,profile) {
       user.username = data?.username;
       localStorage.setItem("userInfo", JSON.stringify(user));
     } catch (error) {
+      dispatch(authActions.setLoading(false));
       toast.error(error.response.data.message);
     }
   };

@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 export function loginUser(user) {
     return async (dispatch) => {
       try {
+        dispatch(authActions.setLoading(true));
         const { data } = await request.post("/api/auth/login",user);
         dispatch(authActions.login(data));
         localStorage.setItem("userInfo", JSON.stringify(data));
       } catch (error) {
+        dispatch(authActions.setLoading(false));
         toast.error(error.response.data.message);
       }
     }
@@ -27,9 +29,11 @@ export function logoutUser() {
 export function registerUser(user) {
   return async (dispatch) => {
     try {
+      dispatch(authActions.setLoading(true));
       const { data } = await request.post("/api/auth/register",user);
       dispatch(authActions.register(data.message));
     } catch (error) {
+      dispatch(authActions.setLoading(false));
       toast.error(error.response.data.message);
     }
   }

@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./form.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/apiCalls/authApiCall";
+import { RotatingLines } from "react-loader-spinner";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const dispatch = useDispatch();
+    const { loading } = useSelector(state => state.auth);
 
     // Form Submit Handler
     const formSubmitHandler = (e) => {
@@ -51,8 +53,16 @@ const Login = () => {
                      onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <button className="form-btn" type="submit">
-                    Login
+                <button className="form-btn" type="submit" disabled={loading}>
+                    {loading ? (
+                        <RotatingLines
+                          strokeColor="white"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="25"
+                          visible={true}
+                        />
+                    ) : "Login"}
                 </button>
             </form>
             <div className="form-footer">
