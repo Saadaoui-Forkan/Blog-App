@@ -37,6 +37,11 @@ app.use(cors({
   origin: "http://localhost:3000"
 }));
 
+// Test backend route
+app.use("/", (req, res) => {
+  res.send("✅ Server is running smoothly! 🌟 🚀");
+});
+
 // Routes
 app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/users", require("./routes/usersRoute"));
